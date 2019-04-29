@@ -1,0 +1,92 @@
+{include file="./public_header" /}
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>设置权限</h5>                       
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id='authForm'>
+                            <input type="hidden" name='Group_ID' value='{{$Group_ID}}'>
+                            <input type="hidden" name='usertoken' value='{{$usertoken}}'>
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label">权限
+                                </label>
+                               <div class="col-sm-10">
+                                <ul class="list-group">
+                                    {volist name="tree" id="v"}
+                                        <li class="list-group-item">
+                                            <span>
+                                                {{$v.Menu_name}}
+                                                <span>
+                                                     {volist name="v.auth" id="vvv"}
+                                                      <label>{{$vvv['auth_name']}}</label>
+                                                    <input type="checkbox" name="Group_auths[]" value="{{$vvv['auth_id']}}"  {if condition="in_array($vvv['auth_id'],$Group_item['Group_auths'])"}checked{/if} >
+                                                     {/volist}
+                                                </span>
+                                            </span>
+                                            <ul class="list-group">
+                                                 {volist name="v.Menu_sons" id="vv"}
+                                        <li class="list-group-item">
+                                                    <span>  {{$vv.Menu_name_c}}</span>
+                                                <span>
+                                                     {volist name="vv.auth" id="vvvv"}
+                                                     <label>{{$vvvv['auth_name']}}</label>
+                                                    <input type="checkbox" name="Group_auths[]" value="{{$vvvv['auth_id']}}"  {if condition="in_array($vvvv['auth_id'],$Group_item['Group_auths'])"}checked{/if} >
+                                                     {/volist}
+                                                </span>
+                                                
+                                                </li>
+                                                 {/volist}
+                                            </ul>
+                                        </li>
+                                       {/volist}
+                                </ul>
+                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button type="button" class="btn btn-primary" id="submit">保存内容</button>
+                                    <button type="button" class="btn btn-white" onclick="javascript:history.go(-1);">取消</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $("#submit").click(function () {
+        $.ajax({
+            url: "../group/auth_assign_ajax",
+            type: 'post',
+            dataType: 'json',
+            data: $('#authForm').serialize(),
+            success: function (res) {
+                if (res.code == '1') {
+                    swal({
+                        title: "Error!",
+                        text: res.errmsg,
+                        type: "error",
+                        confirmButtonText: "Cool"
+                    });
+                } else {
+                    history.go(-1);
+                }
+
+            },
+            error: function () {
+                swal("网络错误", "", "error");
+            }
+
+        });
+
+    });
+
+</script>
+</body>
+{include file="./public_footer" /}

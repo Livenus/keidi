@@ -1,0 +1,92 @@
+{include file="./public_header" /}
+<body class="gray-bg">
+   <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>菜单列表</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="table_data_tables.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                       <button class="btn btn-primary " type="button" onclick='create_menu()'>添加</button>
+                       <table class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th>菜单名称</th>
+                                    <th>菜单值</th>
+                                    <th>状态</th>
+                                    <th>排序</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {volist name='data' id='vo'}
+                                <tr class="parent" onclick="switch_sons({{$vo['Menu_id']}})">
+                                    <td>{{$vo['Menu_name_c']}}</td>
+                                    <td>{{$vo['Menu_value']}}</td>
+                                    <td> 
+                                      {switch name="vo['Menu_status']"}
+                                        {case value="0"} 禁用{/case}
+                                        {case value="1"} 启用{/case}
+                                        {default /} 禁用
+                                      {/switch}
+                                    </td>
+                                    <td class="center">{{$vo['Menu_order']}}</td>
+                                    <td class="center"><a href="{{:url('edit',array('usertoken'=>$usertoken,'id'=>$vo['Menu_id']))}}">编辑</a></td>
+                                </tr>
+                                {volist name="vo['Menu_sons']" id='son'}
+                                  <tr class="son_{{$vo['Menu_id']}}">
+                                    <td>{{$son['Menu_name_c']}}</td>
+                                    <td>{{$son['Menu_value']}}</td>
+                                    <td>
+                                      {switch name="son['Menu_status']"}
+                                        {case value="0"} 禁用{/case}
+                                        {case value="1"} 启用{/case}
+                                        {default /} 禁用
+                                      {/switch}
+                                    </td>
+                                    <td class="center">{{$son['Menu_order']}}</td>
+                                    <td class="center"><a href="{{:url('edit',array('usertoken'=>$usertoken,'id'=>$son['Menu_id']))}}">编辑</a></td>
+                                  </tr>
+                                {/volist}
+                                {/volist}
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+var usertoken = "{{$usertoken}}";
+var add="{{:url('menu/menu_create',['usertoken'=>$usertoken])}}"
+    function switch_sons(pid){
+      var tr = $('.son_'+pid);
+      if(tr.css('display') == 'none'){
+        tr.show();
+      }else{
+        tr.hide();
+      }
+    }
+    function edit_menu(auth_id){
+        window.location.href = '../auth/auth_update.html?auth_id='+auth_id+'&usertoken='+usertoken;
+    }
+    function create_menu(){
+      window.location.href = add;
+    }
+
+
+</script>
+</body>
+{include file="./public_footer" /}

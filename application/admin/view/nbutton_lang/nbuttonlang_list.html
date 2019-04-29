@@ -1,0 +1,136 @@
+{include file="./public_header" /}
+<style>
+    .float-right{
+        float:right;
+    }
+ </style>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>语言列表</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="table_data_tables.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <button class="btn btn-primary " type="button" onclick='create()'>添加</button>
+                        <!---search start-->
+                        <div class="float-right">
+                            <form id="search">
+                                <input type='hidden' name='usertoken' value="{{$usertoken}}">
+                                <input type="text" name="page" value="" class="input_zdy input-sm" size=15 placeholder="页面"/>
+                                <input type="text" name="menu_key" value="" class="input_zdy input-sm" size=15 placeholder="键"/>
+                                <input type="text" name="zh" value="" class="input_zdy input-sm" size=15 placeholder="中文">
+                                <input type="text" name="eng" value="" class="input_zdy input-sm" size=15 placeholder="英文">
+                                <a href="javascript:;" id="btnsearch" class="btn btn-primary btn-sm">查询</a>
+                            </form>
+                        </div>
+                        <!---search end---->
+                        <table class="table table-striped noticeList" id="table_data" cellspacing="0" width="100%" style="border-bottom: none !important;"></table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var usertoken = "{{$usertoken}}";
+        var url = "{{:url('NbuttonLang/nbuttonlang_list_ajax')}}";
+        var create_url = "{{:url('NbuttonLang/create',array('usertoken'=>$usertoken))}}";
+        var edit_url = "{{:url('NbuttonLang/edit',array('usertoken'=>$usertoken))}}";
+             table=$("#table_data").DataTable({
+                /*   "autoWidth":true,
+                 "scrollX": true,*/
+                "paging": true,
+                "destroy": true,
+                "pagingType": "full_numbers",
+                "lengthMenu": [5, 10, 25, 50],
+                "processing": true,
+                "searching": false, //是否开启搜索
+                "serverSide": true, //开启服务器获取数据
+                "ajax": {// 获取数据
+                    "url": url,
+                    "dataType": "json", //返回来的数据形式
+                    'type': 'post',
+            'data': function ( d ) {
+               o3 = $.extend({}, d, getQueryParams())
+             return o3;
+              }
+                },
+                "columns": [//定义列数据来源
+                    {'title': "id", 'data': "id", 'searchable': false, 'orderable': false, "width": "80px"},
+                    {'title': "页面", 'data': "page", 'searchable': false, 'orderable': false, "width": "80px"},
+                    {'title': "键", 'data': "menu_key", 'searchable': false, 'orderable': false, "width": "80px"},
+                    {'title': "中文", 'data': "zh", 'searchable': false, 'orderable': false, "width": "80px"},
+                    {'title': "英文", 'data': "eng", 'searchable': false, 'orderable': false, "width": "80px"},
+                    {'title': "描述", 'data': "description", 'description': false, 'orderable': false, "width": "80px"},
+                    {'title': "操作", 'data': "id", 'searchable': false, 'orderable': false, "width": "80px"},
+                ],
+                "columnDefs": [//自定义列
+                    {
+
+                        "targets": 6,
+                        "data": "id",
+                        "render": function (data, type, row) {
+                            var html = '';
+                            html += '<button type="button" onclick="edit(' + data + ')" class="btn btn-w-m btn-white">编辑</button>';
+                            return html;
+                        }
+
+                    }
+                ],
+                language:
+                        {
+                            paginate: {//分页的样式内容。
+                                previous: "上一页",
+                                next: "下一页",
+                                first: "首页",
+                                last: "末页"
+                            },
+
+                            zeroRecords: "没有内容", //table tbody内容为空时，tbody的内容。
+                            //下面三者构成了总体的左下角的内容。
+                            info: "共 _TOTAL_ 条，初始_MAX_ 条，显示第_START_ 条 到第 _END_ 条", //左下角的信息显示，大写的词为关键字。
+                            infoEmpty: "共0条记录", //筛选为空时左下角的显示。
+                            infoFiltered: ""//筛选之后的左下角筛选提示，
+                        },
+            });
+        
+        function edit(id) {
+            var url=edit_url+"&id="+id;
+            window.location.href =edit_url+"?id="+id;
+        }
+        function create() {
+            window.location.href = create_url;
+        }
+
+function getQueryParams() {
+    var q = {};
+    var params = $("#search").serializeArray();
+    for (var item in params) {
+        q[params[item].name] = params[item].value;
+    }
+    return q;
+}
+$("#btnsearch").click(function () {
+    q = getQueryParams();
+    console.log(q);
+    var data = {};
+    data.url = url;
+    data.query = q;
+   table.ajax.reload();
+})
+    </script>
+</body>
+{include file="./public_footer" /}

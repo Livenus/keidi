@@ -1,0 +1,6 @@
+数据库驱动下载https://www.microsoft.com/en-us/download/details.aspx?id=20098
+选择SQLSRV40.EXE
+复制驱动文件到 ext目录
+修改php.ini
+extension=php_sqlsrv_7_ts_x64.dll
+extension=php_pdo_sqlsrv_7_ts_x64.dll

@@ -1,0 +1,71 @@
+{include file="./public_header" /}
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>权限组添加/修改</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="menuForm">
+                            <input type="hidden" name='act' value='{{$act}}'>
+                            <input type="hidden" name='Group_ID' value='{{$act}}'>
+                            <input type="hidden" name='usertoken' value='{{$usertoken}}'>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">权限组名称：</label>
+                                <div class="col-sm-8">
+                                    <input id="cname" name="Group_name"  type="text" class="form-control" value="{{$item['Menu_name']|default=''}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">排序：</label>
+                                <div class="col-sm-8">
+                                    <input id="cemail" type="number" class="form-control" name="Menu_order" value="{{$item['Menu_order']|default=''}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="button" id='submit' class="btn btn-w-m btn-white">确认</button>
+                                    <button type="button" onclick="javascript:history.go(-1);" class="btn btn-w-m btn-white">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+
+   $("#submit").click(function(){
+        $.ajax({
+            url:"../menu/menu_create_ajax",
+            type:'post',
+            dataType:'json',
+            data:$('#menuForm').serialize(),
+            success:function(res){
+                if(res.stat == '0'){
+                    swal({ 
+                      title: "Error!", 
+                      text: res.errmsg,
+                      type: "error", 
+                      confirmButtonText: "Cool" 
+                    });
+                }else{
+                   history.go(-1);
+                }
+                
+            },
+            error:function(){
+                swal("网络错误", "", "error");
+                //alert('网络错误');
+            }
+
+        });
+
+    });
+
+</script>
+</body>
+{include file="./public_footer" /}

@@ -1,0 +1,64 @@
+{include file="./public_header" /}
+<body class="gray-bg">
+   <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>欠款还款类型列表</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="table_data_tables.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                       <button class="btn btn-primary " type="button" onclick='create_menu()'>添加</button>
+                       <table class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>欠款还款类型名称</th>
+                                    <th>所属分组</th>
+                                    <th>优先级(值越小优先级越高)</th>
+                                    <th>编辑操作</th>
+                                    <th>删除操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               
+                                {volist name="data" id='vo'}
+                                  <tr>
+                                    <td>{{$vo['id']}}</td>
+                                    <td>{{$vo['type_name']}}</td>
+                                    <td>{if condition="$vo.key eq '1'"}欠款类型
+                                        {else /} 还款类型
+                                        {/if}</td>
+                                    <td>{{$vo['priority']}}</td>
+                                    <td class="center"><a href="{{:url('type_create',array('usertoken'=>$usertoken,'id'=>$vo['id'],'type_name'=>$vo['type_name'],'key'=>$vo['key'],'priority'=>$vo['priority']))}}">编辑</a></td>
+                                    <td class="center"><a href="{{:url('Type/type_delete',array('usertoken'=>$usertoken,'id'=>$vo['id']))}}">删除</a></td>
+                                  </tr>
+                                {/volist}
+                                
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+var usertoken = "{{$usertoken}}";
+var add="{{:url('type_create',['usertoken'=>$usertoken])}}"
+    function create_menu(){
+      window.location.href = add;
+    }
+</script>
+</body>
+{include file="./public_footer" /}

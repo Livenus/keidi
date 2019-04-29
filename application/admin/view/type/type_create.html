@@ -1,0 +1,86 @@
+{include file="./public_header" /}
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>欠款还款类型添加/修改</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="authForm">
+                            <input type="hidden" name='id' value="{{$item['id']|default=''}}">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">类型名称:</label>
+                                <div class="col-sm-8">
+                                    <input id="cname" name="type_name"  type="text" class="form-control" value="{{$item['type_name']|default=''}}">
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                <label class="col-sm-3 control-label">所属分组:</label>
+                                <div class="col-sm-8">
+                                    <input  type="text" class="form-control" name="key" value='{if condition="$item.key eq 1"}欠款类型{elseif condition="$item.key eq 2"} 还款类型{else /}{/if}'> 
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                <label class="col-sm-3 control-label">类型优先级:</label>
+                                <div class="col-sm-8">
+                                    <input id="cemail" type="number" class="form-control" name="priority" value="{{$item['priority']|default=''}}">
+                                </div>
+                            </div>
+                           
+                           
+                            
+                            <div class="form-group">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="button" id='submit' class="btn btn-w-m btn-white">确认</button>
+                                    <button type="button" onclick="javascript:history.go(-1);" class="btn btn-w-m btn-white">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    </script>
+</body>
+<script>
+        var usertoken = "{{$usertoken}}";
+        var add_url = "{{:url('Type/add',array('usertoken'=>$usertoken))}}";
+        var edit_url = "{{:url('Type/edit',array('usertoken'=>$usertoken,))}}";
+            $("#submit").click(function () {
+            if($("[name='id']").val()){
+                var url=edit_url;
+            }else{
+                 var url=add_url;
+            }
+           // console.log($('#authForm').serialize());return ;
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: $('#authForm').serialize(),
+                success: function (res) {
+                    if (res.stat == '0') {
+                        swal({
+                            title: "Error!",
+                            text: res.errmsg,
+                            type: "error",
+                            confirmButtonText: "Cool"
+                        });
+                    } else {
+                       location.href="{{:url('Type/type_list',array('usertoken'=>$usertoken))}}";
+                    }
+
+                },
+                error: function () {
+                    swal("网络错误", "", "error");
+                }
+
+            });
+
+        });
+ </script>
+{include file="./public_footer" /}

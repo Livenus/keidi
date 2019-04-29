@@ -1,0 +1,95 @@
+{include file="./public_header" /}
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>语言添加/修改</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="authForm">
+                            <input type="hidden" name='id' value="{{$item['id']|default=''}}">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">页面：</label>
+                                <div class="col-sm-8">
+                                    <input  name="page"  type="text" class="form-control" value="{{$item['page']|default=''}}"   {{$item['id']?'readonly':''}}>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">描述：</label>
+                                <div class="col-sm-8">
+                                    <input  type="text" class="form-control" name="description" value="{{$item['description']|default=''}}" {{$item['id']?'readonly':''}}>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">键：</label>
+                                <div class="col-sm-8">
+                                    <input  type="text" class="form-control" name="menu_key" value="{{$item['menu_key']|default=''}}"{{$item['id']?'readonly':''}}>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">中文：</label>
+                                <div class="col-sm-8">
+                                    <input  type="text" class="form-control" name="zh" value="{{$item['zh']|default=''}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">英文：</label>
+                                <div class="col-sm-8">
+                                    <input  type="text" class="form-control" name="eng" value="{{$item['eng']|default=''}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="button" id='submit' class="btn btn-w-m btn-white">确认</button>
+                                    <button type="button" onclick="javascript:history.go(-1);" class="btn btn-w-m btn-white">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    </script>
+</body>
+<script>
+        var usertoken = "{{$usertoken}}";
+        var url = "{{:url('NbuttonLang/nbuttonlang_list_ajax')}}";
+        var create_url = "{{:url('NbuttonLang/create',array('usertoken'=>$usertoken))}}";
+        var edit_url = "{{:url('NbuttonLang/edit',array('usertoken'=>$usertoken))}}";
+            $("#submit").click(function () {
+            if($("[name='id']").val()){
+                var url=edit_url;
+            }else{
+                 var url=create_url;
+            }
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: $('#authForm').serialize(),
+                success: function (res) {
+                    if (res.stat == '0') {
+                        swal({
+                            title: "Error!",
+                            text: res.errmsg,
+                            type: "error",
+                            confirmButtonText: "Cool"
+                        });
+                    } else {
+                        history.go(-1);
+                    }
+
+                },
+                error: function () {
+                    swal("网络错误", "", "error");
+                }
+
+            });
+
+        });
+ </script>
+{include file="./public_footer" /}

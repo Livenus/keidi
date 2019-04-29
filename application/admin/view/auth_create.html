@@ -1,0 +1,100 @@
+{include file="./public_header" /}
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>权限添加/修改</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="authForm">
+                            <input type="hidden" name='usertoken' value='{{$usertoken}}'>
+                            <input type="hidden" name='act' value="{{$act}}">
+                            <input type="hidden" name='auth_id' value="{{$item['auth_id']|default=0}}">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">权限名称：</label>
+                                <div class="col-sm-8">
+                                    <input id="cname" name="auth_name"  type="text" class="form-control" value="{{$item['auth_name']|default=''}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">权限值：</label>
+                                <div class="col-sm-8">
+                                    <input id="cemail" type="text" class="form-control" name="auth_value" value="{{$item['auth_value']|default=''}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">所属菜单：</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control m-b" name="menu_id">
+                                        <option value="0">--请选择所属菜单--</option>
+                                        {volist name="menus" id="vo" key="k"}
+                                        <option value="{{$vo['Menu_id']}}" {if condition="!empty($item['menu_id']) && $vo['Menu_id'] eq $item['menu_id']"}selected{/if}>{{$vo['Menu_name_c']}}</option>
+                                        {volist name="vo['Menu_sons']" id="son" key="kk"}
+                                        <option value="{{$son['Menu_id']}}" {if condition="!empty($item['menu_id']) && $son['Menu_id'] eq $item['menu_id']"}selected{/if}>{{$son['Menu_name_c']}}</option>
+                                        {/volist}
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">排序：</label>
+                                <div class="col-sm-8">
+                                    <input id="cemail" type="number" class="form-control" name="auth_order" value="{{$item['auth_order']|default=0}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">展示菜单：</label>
+                                <div class="col-sm-8">
+                                    <select name="show" class="form-control" >
+                                        <option value='0'>否</option>
+                                         <option value='1'>是</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="button" id='submit' class="btn btn-w-m btn-white">确认</button>
+                                    <button type="button" onclick="javascript:history.go(-1);" class="btn btn-w-m btn-white">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $("#submit").click(function () {
+            $.ajax({
+                url: "../auth/auth_create_ajax",
+                type: 'post',
+                dataType: 'json',
+                data: $('#authForm').serialize(),
+                success: function (res) {
+                    if (res.stat == '0') {
+                        swal({
+                            title: "Error!",
+                            text: res.errmsg,
+                            type: "error",
+                            confirmButtonText: "Cool"
+                        });
+                    } else {
+                        history.go(-1);
+                    }
+
+                },
+                error: function () {
+                    swal("网络错误", "", "error");
+                    //alert('网络错误');
+                }
+
+            });
+
+        });
+
+    </script>
+</body>
+{include file="./public_footer" /}

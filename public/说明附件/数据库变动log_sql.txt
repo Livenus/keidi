@@ -1,0 +1,796 @@
+﻿/**********************菜单表创建***************************/
+CREATE TABLE [dbo].[EnterApp_Menu] (
+  [Menu_id] int  NOT NULL,
+  [Menu_value] varchar(64) COLLATE Chinese_PRC_CI_AS DEFAULT '' NOT NULL,
+  [Menu_name] varchar(16) COLLATE Chinese_PRC_CI_AS DEFAULT '' NULL,
+  [Menu_order] smallint  NULL,
+  [Menu_pid] int  NULL,
+  [Menu_dispbled] tinyint DEFAULT ((1)) NOT NULL,
+  CONSTRAINT [PK__EnterApp__69E62710769CD461] PRIMARY KEY CLUSTERED ([Menu_id])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+)  
+ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[EnterApp_Menu] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'菜单ID',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Menu',
+'COLUMN', N'Menu_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'菜单值',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Menu',
+'COLUMN', N'Menu_value'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'菜单名称',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Menu',
+'COLUMN', N'Menu_name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'菜单排序',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Menu',
+'COLUMN', N'Menu_order'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'菜单父级ID',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Menu',
+'COLUMN', N'Menu_pid'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'是否可用',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Menu',
+'COLUMN', N'Menu_dispbled'
+
+/**********************权限表创建***************************/
+CREATE TABLE [dbo].[EnterApp_Auth] (
+  [auth_id] int  NOT NULL,
+  [auth_name] varchar(16) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [auth_value] varchar(64) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [auth_order] smallint DEFAULT ((0)) NULL,
+  [auth_pid] int DEFAULT ((0)) NULL,
+  CONSTRAINT [PK__EnterApp__6531B6F53F04A00D] PRIMARY KEY CLUSTERED ([auth_id])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+)  
+ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[EnterApp_Auth] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'权限ID',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Auth',
+'COLUMN', N'auth_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'权限名称',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Auth',
+'COLUMN', N'auth_name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'权限值',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Auth',
+'COLUMN', N'auth_value'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'排序',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Auth',
+'COLUMN', N'auth_order'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'上级ID',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Auth',
+'COLUMN', N'auth_pid'
+
+
+/**********************会员组表创建***************************/
+
+CREATE TABLE [dbo].[EnterApp_Group] (
+  [Group_ID] int  NOT NULL,
+  [Group_name] varchar(16) COLLATE Chinese_PRC_CI_AS  NULL,
+  [Group_auths] varchar(1024) COLLATE Chinese_PRC_CI_AS DEFAULT '' NULL,
+  CONSTRAINT [PK__EnterApp__3198126979B875D1] PRIMARY KEY CLUSTERED ([Group_ID])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+)  
+ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[EnterApp_Group] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'分组ID',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Group',
+'COLUMN', N'Group_ID'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'分组名称',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Group',
+'COLUMN', N'Group_name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'组权限',
+'SCHEMA', N'dbo',
+'TABLE', N'EnterApp_Group',
+'COLUMN', N'Group_auths'
+
+/**********************会员表添加组ID***************************/
+ALTER TABLE  EnterApp_User ADD GroupID INT  NOT NULL DEFAULT 0;
+
+
+
+/**** 新增版本表***/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[NVersions]    Script Date: 2018/6/1 17:23:06 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NVersions](
+	[Versions_id] [varchar](50) NOT NULL,
+	[Versions_name] [varchar](50) NULL,
+	[Versions_code] [varchar](50) NULL,
+	[Versions_stat] [int] NULL,
+	[Versions_ban_time] [int] NULL,
+	[Versions_stat_push_time] [int] NULL,
+	[Versions_content] [varchar](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+/*sp_GetNewSaleNO存储过程添加SET NOCOUNT ON; */
+USE [fzkd1]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetNewSaleNO]    Script Date: 2018/6/27 17:09:49 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+CREATE    procedure [dbo].[sp_GetNewSaleNO]
+
+-- 步长
+@IDCount int = 1
+AS
+
+declare 
+	  @CurrentSaleNO int
+	, @cCount int 
+SET NOCOUNT ON;  
+SELECT 
+	@cCount = ( select count(*) from tb_Sale )
+
+if( @cCount = 0 )
+begin
+	UPDATE tbl_Sys_IDIncrease SET CurrentSaleNO = '10000001' WHERE KeyNum = 1
+end
+else
+begin
+	UPDATE tbl_Sys_IDIncrease SET CurrentSaleNO = convert( nvarchar(20), convert(int, CurrentSaleNO ) + 1 ) WHERE KeyNum = 1
+	SELECT CurrentSaleNO = CurrentSaleNO FROM tbl_Sys_IDIncrease WHERE KeyNum = 1
+end
+
+SELECT CurrentSaleNO FROM tbl_Sys_IDIncrease WHERE KeyNum = 1
+	
+RETURN
+GO
+
+
+/*登录信息*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[EnterApp_UserLogin]    Script Date: 2018/6/21 8:50:42 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[EnterApp_UserLogin](
+	[UserID] [int] NOT NULL,
+	[usertoken] [varchar](125) NOT NULL,
+	[logintime] [int] NOT NULL,
+	[loginIp] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[UserID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[EnterApp_UserLogin] ADD  DEFAULT ((0)) FOR [loginIp]
+GO
+/*更新权限名称字符限制*/
+ALTER TABLE [EnterApp_Auth]
+ALTER COLUMN [auth_name] varchar(128)
+/*语言包*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[Nlang]    Script Date: 2018/6/22 10:02:18 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Nlang](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[sys_lang] [nvarchar](150) NULL,
+	[cn_lang] [nvarchar](150) NULL,
+	[en_lang] [nvarchar](150) NULL,
+ CONSTRAINT [PK_Nlang] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'系统说明' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Nlang', @level2type=N'COLUMN',@level2name=N'sys_lang'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'中文说明' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Nlang', @level2type=N'COLUMN',@level2name=N'cn_lang'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'英文说明' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Nlang', @level2type=N'COLUMN',@level2name=N'en_lang'
+GO
+
+
+
+/*调试信息*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[Nlog]    Script Date: 2018/6/22 10:42:34 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Nlog](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[content] [nvarchar](max) NULL,
+	[add_time] [datetime] NULL,
+ CONSTRAINT [PK_Nlog] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/*操作记录*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[NenterUserlog]    Script Date: 2018/6/27 17:28:10 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NenterUserlog](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[module] [nvarchar](50) NULL,
+	[controller] [nvarchar](50) NULL,
+	[action] [nvarchar](50) NULL,
+	[content_des] [nvarchar](50) NULL,
+	[data] [nvarchar](max) NULL,
+	[add_time] [timestamp] NULL,
+ CONSTRAINT [PK_NenterUserlog] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+/*权限分组*/
+ALTER TABLE EnterApp_Auth
+ADD show int 
+/*系统设置*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[Nconfig]    Script Date: 2018/7/4 8:29:58 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Nconfig](
+	[Unit_Price] [decimal](18, 0) NOT NULL,
+	[add_time] [int] NULL,
+	[update_time] [int] NULL,
+	[id] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_Nconfig_1] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/*操作记录*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[NenterUserlog]    Script Date: 2018/7/20 9:03:46 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NenterUserlog](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[module] [nvarchar](50) NULL,
+	[controller] [nvarchar](50) NULL,
+	[action] [nvarchar](50) NULL,
+	[content_des] [nvarchar](50) NULL,
+	[data] [nvarchar](max) NULL,
+	[add_time] [datetime] NULL,
+ CONSTRAINT [PK_NenterUserlog] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'id ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog', @level2type=N'COLUMN',@level2name=N'id'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'模块' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog', @level2type=N'COLUMN',@level2name=N'module'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'控制器' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog', @level2type=N'COLUMN',@level2name=N'controller'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'方法' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog', @level2type=N'COLUMN',@level2name=N'action'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'说明' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog', @level2type=N'COLUMN',@level2name=N'content_des'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog', @level2type=N'COLUMN',@level2name=N'data'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog', @level2type=N'COLUMN',@level2name=N'add_time'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'操作记录' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NenterUserlog'
+GO
+
+/*界面按钮*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[NbuttonLang]    Script Date: 2018/7/25 18:26:59 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NbuttonLang](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[page] [nvarchar](50) NULL,
+	[menu_key] [nvarchar](50) NULL,
+	[eng] [nvarchar](50) NULL,
+	[zh] [nvarchar](max) NULL,
+	[description] [nvarchar](max) NULL,
+ CONSTRAINT [PK_NbuttonLang] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'页面' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NbuttonLang', @level2type=N'COLUMN',@level2name=N'page'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'键值' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NbuttonLang', @level2type=N'COLUMN',@level2name=N'menu_key'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'英文' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NbuttonLang', @level2type=N'COLUMN',@level2name=N'eng'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'中文' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'NbuttonLang', @level2type=N'COLUMN',@level2name=N'zh'
+GO
+
+/*店铺审核*/
+ALTER TABLE MarketShop
+ADD apply_status [int] NULL
+ALTER TABLE MarketShop
+ADD apply_info [nvarchar](50)  NULL
+ALTER TABLE MarketShop
+ADD apply_person [nvarchar](50)  NULL
+ALTER TABLE MarketShop
+ADD apply_action [nvarchar](50)  NULL
+/*管理员状态*/
+ALTER TABLE [EnterApp_User]
+ADD status [int](11)  1
+/*店铺申请记录*/
+USE [fzkd1]
+GO
+
+/****** Object:  Table [dbo].[MarketShoplog]    Script Date: 2018/8/31 10:58:34 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MarketShoplog](
+	[Shopno] [nvarchar](50) NOT NULL,
+	[RegionPerson] [char](10) NULL,
+	[KediID] [char](10) NULL,
+	[OwnerName] [varchar](500) NULL,
+	[State] [varchar](20) NULL,
+	[Phone] [varchar](30) NULL,
+	[Address] [varchar](500) NULL,
+	[OpenDate] [datetime] NULL,
+	[CloseDate] [datetime] NULL,
+	[Add_Date] [datetime] NULL,
+	[Preparedby] [varchar](10) NULL,
+	[Memo] [varchar](50) NULL,
+	[UpdateDate] [datetime] NULL,
+	[Oper] [char](20) NULL,
+	[Status] [bit] NULL,
+	[Memo1] [varchar](50) NULL,
+	[MonthAchieve] [decimal](18, 0) NULL,
+	[Region] [varchar](50) NULL,
+	[Direction] [varchar](50) NULL,
+	[NewCount] [int] NULL,
+	[ComissionLine] [decimal](18, 0) NULL,
+	[apply_status] [int] NULL,
+	[apply_info] [nvarchar](50) NULL,
+	[apply_person] [nvarchar](50) NULL,
+	[apply_action] [nvarchar](50) NULL,
+	[applay_date] [datetime] NULL
+) ON [PRIMARY]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店号，用户填,不能改' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Shopno'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'区域负责人，每个区域都有一个销售人员负责，销售人员的绩效奖金跟其所负责的区域业绩增长率相关' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'RegionPerson'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店店主的科迪卡号，系统存在的会员' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'KediID'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店店主姓名' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'OwnerName'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店所在州' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'State'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店店主电话' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Phone'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店具体地址' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Address'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店开店日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'OpenDate'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店关店日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'CloseDate'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据库里记录生成时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Add_Date'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'填表人' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Preparedby'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'说明' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Memo'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'UpdateDate'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'登录账户的名字' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Oper'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店开关的标志位 :1=开，0=关' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Status'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'备用字段' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Memo1'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N' 当月业绩' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'MonthAchieve'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'区域店名字' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Region'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'国家的东南西北四个方向' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'Direction'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'目前是40万。业绩低于40万的专卖店扣除当月店费，但是新店例外新店前三次业绩是否低于40万都给店费，注意40万这个标准可以调节' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'NewCount'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'判断是否满足发店费的条件，与NewCount相关' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'ComissionLine'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'申请状态0待审核1审核' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'apply_status'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'申请信息' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'apply_info'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'申请日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog', @level2type=N'COLUMN',@level2name=N'applay_date'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'专卖店信息表' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'MarketShoplog'
+GO
+
+/**********************借款表创建***************************/
+CREATE TABLE [dbo].[RefundBorrow] (
+  [id] int  IDENTITY(1,1) NOT NULL,
+  [type_id] int  NOT NULL,
+  [sc] varchar(50) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [date] date  NULL,
+  [total_money] money  NOT NULL,
+  [surplus_money] money  NOT NULL,
+  [is_over] smallint  NOT NULL,
+  [oper] varchar(255) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [memo] varchar(255) COLLATE Chinese_PRC_CI_AS  NULL,
+  CONSTRAINT [PK__RefundBo__3213E83F53891D23] PRIMARY KEY CLUSTERED ([id])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+)  
+ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[RefundBorrow] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'主键id',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'对应类型表id',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'type_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'专卖店经销商编号',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'sc'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'借款时间',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'date'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'借款金额',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'total_money'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'剩余还款金额',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'surplus_money'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'是否还清:1=未还清,2=已还清',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'is_over'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作员',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'oper'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'备注',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow',
+'COLUMN', N'memo'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'借款表',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrow'
+
+/**********************借还款记录表创建***************************/
+CREATE TABLE [dbo].[RefundBorrowLog] (
+  [id] int  IDENTITY(1,1) NOT NULL,
+  [type_id] int  NOT NULL,
+  [oper] varchar(50) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [memo] varchar(255) COLLATE Chinese_PRC_CI_AS  NULL,
+  [log_time] date  NULL,
+  [sc] varchar(50) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [direction] int  NOT NULL,
+  [amount] money  NOT NULL,
+  [refundborrow_id] int  NULL,
+  CONSTRAINT [PK__RefundBo__3213E83F7990F0C6] PRIMARY KEY CLUSTERED ([id])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+)  
+ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[RefundBorrowLog] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'id',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'对应表RefundBorrowType的id',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'type_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作员',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'oper'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'备注',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'memo'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'时间',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'log_time'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'专卖店经销商编号',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'sc'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'方向:1=借款,2=主动还款,3=被动扣款还款',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'direction'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'借还款金额',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'amount'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'还款时记录的应借款记录的id',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog',
+'COLUMN', N'refundborrow_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'借还款记录表',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowLog'
+
+/**********************借还款类型表创建***************************/
+CREATE TABLE [dbo].[RefundBorrowType] (
+  [id] int  IDENTITY(1,1) NOT NULL,
+  [type_name] varchar(255) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [key] int  NOT NULL,
+  [priority] int  NOT NULL,
+  CONSTRAINT [PK__RefundBo__3213E83F2D6B0ECF] PRIMARY KEY CLUSTERED ([id])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+)  
+ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[RefundBorrowType] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'主键id',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowType',
+'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'类型(个人,业绩,teller,cash)',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowType',
+'COLUMN', N'type_name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'1=欠款类型,2=还款类型',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowType',
+'COLUMN', N'key'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'还款优先级,值越小优先级越高',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowType',
+'COLUMN', N'priority'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'借还款类型表',
+'SCHEMA', N'dbo',
+'TABLE', N'RefundBorrowType'
